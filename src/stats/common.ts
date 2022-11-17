@@ -22,6 +22,11 @@ export interface PlayerIndexedType {
   opponentIndex: number;
 }
 
+export interface PlayerIndicesType {
+  playerIndex: number;
+  opponentIndices: number[];
+}
+
 export interface DurationType {
   startFrame: number;
   endFrame?: number | null;
@@ -243,6 +248,12 @@ export const Timers = {
   COMBO_STRING_RESET_FRAMES: 45,
 };
 
+export function getPlayerPermutationsFromSettings(settings: GameStartType): PlayerIndicesType[] {
+  return settings.isTeams
+    ? getDoublesPlayerPermutationsFromSettings(settings)
+    : getUpdatedSinglesPlayerPermutationsFromSettings(settings);
+}
+
 export function getSinglesPlayerPermutationsFromSettings(settings: GameStartType): PlayerIndexedType[] {
   if (!settings || settings.players.length !== 2) {
     // Only return opponent indices for singles
@@ -257,6 +268,56 @@ export function getSinglesPlayerPermutationsFromSettings(settings: GameStartType
     {
       playerIndex: settings.players[1]!.playerIndex,
       opponentIndex: settings.players[0]!.playerIndex,
+    },
+  ];
+}
+
+export function getUpdatedSinglesPlayerPermutationsFromSettings(settings: GameStartType): PlayerIndicesType[] {
+  return [
+    {
+      playerIndex: settings.players[0]!.playerIndex,
+      opponentIndices: [settings.players[1]!.playerIndex],
+    },
+    {
+      playerIndex: settings.players[1]!.playerIndex,
+      opponentIndices: [settings.players[0]!.playerIndex],
+    },
+  ];
+}
+
+export function getDoublesPlayerPermutationsFromSettings(settings: GameStartType): PlayerIndicesType[] {
+  return [
+    {
+      playerIndex: settings.players[0]!.playerIndex,
+      opponentIndices: [
+        settings.players[1]!.playerIndex,
+        settings.players[2]!.playerIndex,
+        settings.players[3]!.playerIndex,
+      ],
+    },
+    {
+      playerIndex: settings.players[1]!.playerIndex,
+      opponentIndices: [
+        settings.players[0]!.playerIndex,
+        settings.players[2]!.playerIndex,
+        settings.players[3]!.playerIndex,
+      ],
+    },
+    {
+      playerIndex: settings.players[2]!.playerIndex,
+      opponentIndices: [
+        settings.players[0]!.playerIndex,
+        settings.players[1]!.playerIndex,
+        settings.players[3]!.playerIndex,
+      ],
+    },
+    {
+      playerIndex: settings.players[3]!.playerIndex,
+      opponentIndices: [
+        settings.players[0]!.playerIndex,
+        settings.players[1]!.playerIndex,
+        settings.players[2]!.playerIndex,
+      ],
     },
   ];
 }
