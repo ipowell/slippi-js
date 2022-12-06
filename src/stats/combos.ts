@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { EventEmitter } from "events";
 import { last } from "lodash";
 
@@ -103,8 +102,8 @@ function handleComboCompute(
   if (prevFrame) {
     prevPlayerFrame = prevFrame!.players[indices.playerIndex]!.post;
     prevOpponentsFrames = indices.opponentIndices
-      .filter((index) => prevFrame.players[index] != null)
-      .map((index) => prevFrame.players[index]!.post);
+      .filter((index: number) => prevFrame.players[index] != null)
+      .map((index: number) => prevFrame.players[index]!.post);
   } else {
     // TODO: consider this
     return;
@@ -122,7 +121,7 @@ function handleComboCompute(
   // the actionStateCounter at this point which counts the number of frames since
   // an animation started. Should be more robust, for old files it should always be
   // null and null < null = false
-  const lastHitByIndex = frame.players[indices.playerIndex]!.post.lastHitBy;
+  const lastHitByIndex = frame.players[indices.playerIndex]!.post.lastHitBy!;
   if (lastHitByIndex == null || frame.players[lastHitByIndex] == null) {
     state.lastHitAnimation = null;
   } else {
@@ -171,7 +170,7 @@ function handleComboCompute(
           ? frame.players[lastHitByIndex]!.post
           : frame.players[indices.playerIndex]!.post; // no idea what to do in this case
         state.move = {
-          playerIndex: indices.playerIndex,
+          playerIndex: lastHitByIndex,
           frame: currentFrameNumber,
           moveId: lastHitBy.lastAttackLanded!,
           hitCount: 0,
